@@ -2,9 +2,14 @@ import os
 import getpass
 import json
 import bcrypt
+import hashlib
 
 MAX_TRIES = 3
 DB_FILE = "users.json"
+def password_hasher(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+   
+
 def load_users():
     if not os.path.exists(DB_FILE):
         return {}
@@ -33,8 +38,8 @@ def register(users):
             print("The password cant be less than 8 charcters ")
             continue
         break
-    hashed_password = bcrypt.hashpw(password.encode(),bcrypt.gensalt())
-    users[username]= hashed_password
+    
+    users[username]= password_hasher(password)
     save_users(users)
     print(f"Account created.Welcome , {username}!\n")
 def login():
@@ -46,7 +51,8 @@ def login():
         print("="* 40)
         user_name = input("Whats your username ?:").strip()
         password = getpass.getpass("Your password fam?:")
-        if user_name in users and bcrypt.checkpw(password.encode(), users[user_name].encode()):
+        if user_name in users and password_hasher(password) == users[user_name]:
+        
             print(f"signed in successfully into {user_name}")
             return user_name
         else:
