@@ -1,94 +1,86 @@
-import os 
 import getpass
-import json
-import bcrypt
+import os 
 import hashlib
-
+import json
 MAX_TRIES = 3
-DB_FILE = "users.json"
-def password_hasher(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-   
-
+FILENAME = "reg.json"
 def load_users():
-    if not os.path.exists(DB_FILE):
+    if not os.path.exists(FILENAME):
+        return{}
+    try :
+        with open(FILENAME, "r") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
         return {}
-    with open(DB_FILE,"r") as f:
-        return json.load(f)
 def save_users(users):
-    with open(DB_FILE,"w")as f:
-        json.dump(users,f,indent = 2)
-def register(users):
+    with open(FILENAME,"w") as f:
+        json.dump(users,f,indent = 4)
+def hash_passwords(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+def registration(users):
     while True:
-        username = input("What do you want your username to be ?:").strip()
+        username = input("Please type in your desired username?:  ")
         if not username:
-            print("Error:Username field cannot be empty!")
-        else:
-            if username in users:
-                print("Username already exists,please pick another one")
-                continue
-            break
-    while True:
-        password = getpass.getpass("Please set a secure password ")
-        confirm = getpass.getpass("Please confirm your password")
-        if password != confirm:
-            print("passwords do not match!")
+            print("username feild cant  be empty ")
             continue
-        if len(password) < 8:
-            print("The password cant be less than 8 charcters ")
+        if username in users:
+            print("sorry that username is already in use please pick another one")
             continue
         break
-    
-    users[username]= password_hasher(password)
-    save_users(users)
-    print(f"Account created.Welcome , {username}!\n")
-def login():
-    users = load_users()
-    attempts = 0
-    while attempts < MAX_TRIES:
-        print("="*40 )
-        print("Welcome to login !")
-        print("="* 40)
-        user_name = input("Whats your username ?:").strip()
-        password = getpass.getpass("Your password fam?:")
-        if user_name in users and password_hasher(password) == users[user_name]:
-        
-            print(f"signed in successfully into {user_name}")
-            return user_name
-        else:
-            attempts += 1 
-            print(f"Invalid username or password try again,chances remaining {MAX_TRIES-attempts}")
+    while True:
+        password = input("Please type in your refferred password?: ")  
+        if len(password) < 8:
+            print("Passowrd length must exceed 8 charcters")
+            continue 
+        confirm = input("Please confirm your password")
+        if confirm != password:
+            print ("The password must match in both fields ")
             continue
-    print("Too many failed attempts retsrt the session")
+        users[username] = {
+            "password":hash_passwords(password)
+        } 
+        save_users(users)  
+        print(f"Registration successfull,welcome {username}")
+        break       
+def login(users):
+    tries = 0
+    while tries < MAX_TRIES:
+        username = input("Whats your username?:")
+        password = getpass.getpass (" whats your password ?:" )
+
+        if not username:
+            print("Username field cant be empty!!")
+        if not password:
+            
+            print("Password field cant be empty")
+            continue
+        hashed_password = hash_passwords(password)
+        if username in users and hashed_password == users[username]["password"]:
+            print(f"welcome {username} youve successfully logged in !")
+            return True
+        else:
+            tries +=1 
+            print(f"unsuccesfull login remianing attempts {MAX_TRIES-tries}")
+            continue
+def exit_script():
+    print("Goodbye estimmed users")
     return None
-def invalid_option():
-    print("invalid option")
-def exit():
-    print("Goodbye")
-    return None
+
 def main():
-    users = load_users()
-    print("=== Auth System ===")
-    print("1. Login")
-    print("2. Register")
-    print("3.Exit")
-    choice = input("Choose an option (1/2)")
-    if choice == "1":
-        login()
-    elif choice == "2":
-        register(users)
-    elif choice == "3":
-        exit()
+    users =load_users()
+    while True:
+        choice = input("Please pick an option between: \n 1.Login \n 2.Registration \n 3.Exit \n :")
+        if choice =="1":
+            login(users)
+        elif choice == "2":
+            registration(users)
+        elif choice == "3":
+            exit_script()
+        else:
+            print("Invalid option")
 
+    
 
-    else:
-        print("Invalid input")
-
-
-
-   
 if __name__ == "__main__":
     main()
-
-
-
+    
