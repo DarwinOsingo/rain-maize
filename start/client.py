@@ -1,0 +1,21 @@
+import requests
+API_URL = "http://127.0.0.1:8000/ask"
+while True:
+    print("="*50)
+
+    print(" WELCOME TO THE OLLAMA CLI")
+    print("="*50)
+    user_input = input("Whats your question?: ")
+    if user_input in ["exit","quit"]:
+        print("Goodbye")
+        break
+    payload = {
+        "prompt":user_input
+        
+    }
+    try:
+        response = requests.post(API_URL,json= payload)
+        result= response.json()
+        print(f" Assistant:{result.get('response','No response service unavailable ')}")
+    except Exception as e:
+        print(f"Error {e}")
