@@ -8,6 +8,10 @@ users = {
         "role": "admin"
     }
 }
+def banner():
+    print("="* 50)
+    print("WELCOME TO THE CLI USER")
+    print("="*50)
 def login(users):
     tries = 0
 
@@ -17,15 +21,19 @@ def login(users):
             print("Whats the issue fill the damn field !!😂😂")
             continue
         password = getpass.getpass("Your paswword?: ")
+        time = datetime.datetime.now().strftime("%d %m %y ")
         if username in users and password == users["Darwin"]["password"]:
-            print(f" Welcome {username}")
+
+            print(f" Welcome {username},Youve logged in at {time}")
+            break
             
         else:
             print(f"chances remaining {MAX_TRIES-tries} ")
             tries += 1
             
 
-if __name__ =="__main__":
-    login(users)
 
+
+banner()
+login(users)
 

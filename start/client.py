@@ -16,6 +16,6 @@ while True:
     try:
         response = requests.post(API_URL,json= payload)
         result= response.json()
-        print(f" Assistant:{result.get('response','No response service unavailable ')}")
+        print(f" Assistant:{result.get('reply','No response service unavailable ')}")
     except Exception as e:
         print(f"Error {e}")

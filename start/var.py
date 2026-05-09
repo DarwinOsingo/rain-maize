@@ -160,7 +160,7 @@ def main():
         elif choice == 3:
             exit_script()
         else:
-            print("Invalid try again lease")
+            print("Invalid try again please")
 if __name__ == "__main__":
     main()
 

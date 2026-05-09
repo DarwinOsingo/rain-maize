@@ -32,7 +32,7 @@ def registration(users):
         if len(password) < 8:
             print("Passowrd length must exceed 8 charcters")
             continue 
-        confirm = input("Please confirm your password")
+        confirm = getpass.getpass("Please confirm your password")
         if confirm != password:
             print ("The password must match in both fields ")
             continue
