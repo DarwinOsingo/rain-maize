@@ -1,10 +1,11 @@
 import requests
 API_URL = "http://127.0.0.1:8000/ask"
-while True:
-    print("="*50)
+print("="*50)
 
-    print(" WELCOME TO THE OLLAMA CLI")
-    print("="*50)
+print(" WELCOME TO THE OLLAMA CLI")
+print("="*50)
+while True:
+   
     user_input = input("Whats your question?: ")
     if user_input in ["exit","quit"]:
         print("Goodbye")
