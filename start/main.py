@@ -2,9 +2,12 @@ from fastapi import FastAPI, HTTPException
 import uvicorn
 import httpx
 from pydantic import BaseModel
+from history import get_sessions,append_to_session
+
 app = FastAPI()
 OLLAMA_URL = "http://localhost:11434/api/generate"
 class  AskRequest(BaseModel):
+    session_id: str
     prompt :str
     model: str = "qwen2.5:1.5b"
 @app.get("/health")
@@ -12,6 +15,8 @@ async def health():
     return {"status":"ok"}
 @app.post("/ask")
 async def ask(data:AskRequest):
+    history = get_sessions(data.session_id)
+
     payload= {
         "model":data.model,
         "prompt":data.prompt,
@@ -21,8 +26,8 @@ async def ask(data:AskRequest):
         async with httpx.AsyncClient(timeout=200) as client:
             response = await client.post(OLLAMA_URL, json=payload)
             response.raise_for_status()
-            data = response.json()
-            reply = data.get("response", "")
+            ollama_response  = response.json()
+            reply = ollama_response.get("response", "")
             return {"reply": reply}
     except httpx.RequestError as e:
        raise HTTPException(status_code=503,detail=f"Ollama unreachable {e}")
