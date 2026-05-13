@@ -32,7 +32,7 @@ async def ask(data: AskRequest):
         "stream": False
     }
     try:
-        async with httpx.AsyncClient(timeout=200) as client:
+        async with httpx.AsyncClient(timeout=300) as client:
             response = await client.post(OLLAMA_URL, json=payload)
             response.raise_for_status()
             ollama_response = response.json()
