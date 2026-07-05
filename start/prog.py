@@ -1,9 +1,11 @@
+##prog.py 
 from pydantic import BaseModel
-from fastapi import FastAPI
-from uuid4 import uuid4
+from fastapi import FastAPI,APIRouter 
+from uuid import uuid4
 import json
 import os
-app = FastAPI()
+
+router = APIRouter()
 class Room(BaseModel):
     title:str
     description: str
@@ -16,15 +18,17 @@ def load_rooms():
     if not os.path.exists(ROOMS_FILE):
         return []
     with open (ROOMS_FILE,"r") as file:
+        return json.load(file)
+    
 
-        json.load(file)
+        
 def save_rooms(rooms):
     with open(ROOMS_FILE,"w") as f:
         json.dump(rooms,f,indent=2)
-@app.get("/")
+@router.get("/")
 def home():
     return {"messege":"Room booking API home "}
-@app.post("/rooms")
+@router.post("/rooms")
 def create_room(room:Room):
     rooms = load_rooms()
     new_room = {
@@ -33,11 +37,12 @@ def create_room(room:Room):
         "available": True
     }
     rooms.append(new_room)
+    save_rooms(rooms)
     return{
         "message":"Room created successfully",
         "room":new_room
     }
-@app.get("/rooms")
+@router.get("/rooms")
 def get_rooms():
     rooms= load_rooms()
     return rooms
