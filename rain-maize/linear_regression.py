@@ -7,7 +7,11 @@ import seaborn as sns
 df = pd.read_csv('kenya_roads.csv')
 
 
-
+df['cost_per_km']=df['total_cost_KES_M']/df['road_length_km']
 
 df = pd.get_dummies(df,columns=["location_type","climate","construction_season","terrain","soil_type"],drop_first=True    )
-df = df.drop(columns=['project_id'])
+df = df.drop(columns=['project_id','total_cost_KES_M'])
+x= df.drop(columns = ['cost_per_km']).values.astype(float)
+y = df['cost_per_km'].values.astype(float)
+feature_names= df.drop(columns=['cost_per_km']).columns.tolist()
+

@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBIT 1.2 — Introduction to Computer Programming | JKUAT Group 3</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme="light"] {
+  /* JKUAT Palette */
+  --jkuat-green:   #006633;
+  --jkuat-green2:  #008040;
+  --jkuat-green3:  #00a352;
+  --jkuat-red:     #CC0000;
+  --jkuat-red2:    #e60000;
+  --jkuat-gold:    #FFB800;
+  --jkuat-gold2:   #ffd000;
+  /* UI */
+  --bg:        #ffffff;
+  --surface:   #f8f8f8;
+  --surface2:  #f0f0f0;
+  --surface3:  #e8e8e8;
+  --border:    #d0d0d0;
+  --border2:   #c0c0c0;
+  --accent:    var(--jkuat-green3);
+  --accent-glow: rgba(0,163,82,0.08);
+  --gold:      var(--jkuat-gold);
+  --gold-glow: rgba(255,184,0,0.08);
+  --red:       var(--jkuat-red);
+  --red-glow:  rgba(204,0,0,0.08);
+  --text:      #333333;
+  --muted:     #666666;
+  --bright:    #000000;
+  --code-bg:   #f5f5f5;
+}
+[data-theme="dark"] {
+  /* JKUAT Palette */
+  --jkuat-green:   #006633;
+  --jkuat-green2:  #008040;
+  --jkuat-green3:  #00a352;
+  --jkuat-red:     #CC0000;
+  --jkuat-red2:    #e60000;
+  --jkuat-gold:    #FFB800;
+  --jkuat-gold2:   #ffd000;
+  /* UI */
+  --bg:        #07100d;
+  --surface:   #0d1a12;
+  --surface2:  #122018;
+  --surface3:  #182c1f;
+  --border:    #1a2e20;
+  --border2:   #224030;
+  --accent:    var(--jkuat-green3);
+  --accent-glow: rgba(0,163,82,0.12);
+  --gold:      var(--jkuat-gold);
+  --gold-glow: rgba(255,184,0,0.10);
+  --red:       var(--jkuat-red);
+  --red-glow:  rgba(204,0,0,0.10);
+  --text:      #c8ddd0;
+  --muted:     #4d6e58;
+  --bright:    #eefaf3;
+  --code-bg:   #040b07;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--jkuat-green), var(--jkuat-gold));
+  width: 0%; z-index: 1000;
+  transition: width 0.1s ease;
+  box-shadow: 0 0 12px rgba(0,163,82,0.6);
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 248px;
+  background: var(--surface);
+  border-right: 1px solid var(--border2);
+  z-index: 100; overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  padding: 0 0 40px;
+}
+#sidebar.open { transform: translateX(0); }
+
+#sidebar-logo {
+  padding: 20px;
+  background: var(--jkuat-green);
+  border-bottom: 3px solid var(--jkuat-gold);
+}
+#sidebar-logo .logo-title {
+  font-weight: 800; font-size: 16px; color: #fff; letter-spacing: -0.5px;
+}
+#sidebar-logo .logo-sub {
+  font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px;
+}
+#sidebar-logo .logo-group {
+  display: inline-block;
+  margin-top: 8px;
+  background: var(--jkuat-gold);
+  color: #000;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 10px; border-radius: 100px;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+.nav-section-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  padding: 16px 20px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px; font-size: 13px; color: var(--text);
+  cursor: pointer; transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { background: var(--surface2); color: var(--bright); }
+.nav-item.active { border-left-color: var(--jkuat-green3); color: var(--jkuat-green3); background: var(--accent-glow); }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── MENU BUTTON ── */
+#menu-btn {
+  position: fixed; top: 20px; left: 20px; z-index: 200;
+  background: var(--jkuat-green); border: 2px solid var(--jkuat-gold);
+  border-radius: 10px; width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; color: #fff;
+}
+#menu-btn:hover { background: var(--jkuat-green2); }
+#menu-btn svg { transition: transform 0.3s; }
+#menu-btn.open svg { transform: rotate(90deg); }
+
+/* ── THEME TOGGLE BTN ── */
+#theme-btn {
+  position: fixed; top: 20px; left: 72px; z-index: 200;
+  background: var(--jkuat-green); border: 2px solid var(--jkuat-gold);
+  border-radius: 10px; width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; color: #fff; font-size: 18px;
+}
+#theme-btn:hover { background: var(--jkuat-green2); }
+
+/* ── OVERLAY ── */
+#overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); z-index: 50; }
+#overlay.show { display: block; }
+
+/* ── HEADER ── */
+header {
+  position: relative; padding: 0;
+  border-bottom: 1px solid var(--border2);
+  overflow: hidden;
+}
+
+/* JKUAT stripe at top */
+.jkuat-stripe {
+  display: flex; height: 8px;
+}
+.stripe-green { flex: 3; background: var(--jkuat-green); }
+.stripe-gold  { flex: 1; background: var(--jkuat-gold); }
+.stripe-red   { flex: 1; background: var(--jkuat-red); }
+
+.hero-inner {
+  padding: 60px 40px 56px;
+  position: relative; text-align: center;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,102,51,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,102,51,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.hero-orb {
+  position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none;
+}
+.hero-orb-1 { width: 500px; height: 300px; background: rgba(0,128,64,0.07); top: -80px; left: 50%; transform: translateX(-50%); }
+.hero-orb-2 { width: 200px; height: 200px; background: rgba(255,184,0,0.05); bottom: 0; right: 10%; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  padding: 6px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--jkuat-green3);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 24px; position: relative;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--jkuat-gold); animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+header h1 {
+  font-size: clamp(28px, 4.5vw, 58px);
+  font-weight: 900; color: var(--bright);
+  letter-spacing: -2px; line-height: 1.05;
+  position: relative;
+}
+header h1 .green { color: var(--jkuat-green3); }
+header h1 .gold  { color: var(--jkuat-gold); }
+
+.hero-quote {
+  font-style: italic; font-size: 15px;
+  color: var(--muted); margin-top: 20px;
+  position: relative; max-width: 600px;
+  margin-left: auto; margin-right: auto;
+  border-left: 3px solid var(--jkuat-gold);
+  padding-left: 16px; text-align: left;
+}
+.hero-quote cite { display: block; font-style: normal; font-size: 12px; color: var(--jkuat-gold); margin-top: 4px; font-weight: 600; }
+
+.hero-meta {
+  display: flex; gap: 20px; justify-content: center;
+  flex-wrap: wrap; margin-top: 28px; position: relative;
+}
+.meta-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px; padding: 8px 18px;
+  font-size: 13px; color: var(--text);
+}
+.meta-pill strong { color: var(--bright); }
+
+.hero-stats {
+  display: flex; gap: 28px; justify-content: center;
+  flex-wrap: wrap; margin-top: 28px; position: relative;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; font-weight: 700; color: var(--jkuat-green3); display: block;
+}
+.stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* JKUAT bottom stripe */
+.jkuat-stripe-bottom {
+  display: flex; height: 6px;
+}
+
+/* ── SEARCH ── */
+.search-wrap {
+  max-width: 580px; margin: 28px auto 0; position: relative;
+}
+.search-wrap input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 13px 48px 13px 20px;
+  font-family: 'Outfit', sans-serif; font-size: 15px; color: var(--bright);
+  outline: none; transition: all 0.2s;
+}
+.search-wrap input::placeholder { color: var(--muted); }
+.search-wrap input:focus { border-color: var(--jkuat-green3); box-shadow: 0 0 0 3px var(--accent-glow); }
+.search-wrap svg { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+
+/* ── MAIN ── */
+main { max-width: 900px; margin: 0 auto; padding: 48px 24px 100px; position: relative; }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin: 64px 0 24px;
+  opacity: 0; transform: translateY(16px); transition: all 0.5s ease;
+}
+.section-header.visible { opacity: 1; transform: translateY(0); }
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  padding: 5px 14px; border-radius: 6px;
+  letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+}
+.tag-a { background: rgba(0,163,82,0.12); color: var(--jkuat-green3); border: 1px solid rgba(0,163,82,0.3); }
+.tag-b { background: rgba(255,184,0,0.10); color: var(--jkuat-gold); border: 1px solid rgba(255,184,0,0.3); }
+.tag-c { background: rgba(0,163,82,0.08); color: #5ae0a0; border: 1px solid rgba(90,224,160,0.25); }
+.tag-d { background: rgba(204,0,0,0.10); color: #ff6666; border: 1px solid rgba(204,0,0,0.3); }
+.section-title { font-size: 19px; font-weight: 700; color: var(--bright); }
+.section-line { flex: 1; height: 1px; background: var(--border2); }
+
+/* ── CARDS ── */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px; margin-bottom: 18px; overflow: hidden;
+  opacity: 0; transform: translateY(20px); transition: all 0.5s ease, box-shadow 0.2s;
+}
+.q-card.visible { opacity: 1; transform: translateY(0); }
+.q-card:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.q-card.force-visible { opacity: 1; transform: translateY(0); }
+
+.q-header {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 20px 24px; cursor: pointer; user-select: none; transition: background 0.15s;
+}
+.q-header:hover { background: var(--surface2); }
+.q-num {
+  background: var(--surface3); border: 1px solid var(--border2);
+  color: var(--jkuat-green3); font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.q-title-wrap { flex: 1; }
+.q-title { font-size: 15px; font-weight: 600; color: var(--bright); line-height: 1.5; }
+.q-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.q-chevron { color: var(--muted); transition: transform 0.3s; flex-shrink: 0; margin-top: 6px; }
+.q-card.expanded .q-chevron { transform: rotate(180deg); }
+
+.q-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+.q-card.expanded .q-body { display: block; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 4px;
+  background: var(--surface2); border-radius: 10px; padding: 4px;
+  margin: 18px 0 14px; width: fit-content; flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 7px 15px; border-radius: 7px; font-size: 13px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+  border: none; background: none; font-family: 'Outfit', sans-serif;
+}
+.tab-btn.active { background: var(--surface3); color: var(--bright); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 0 10px 10px 0; padding: 15px 20px;
+  margin: 14px 0; font-size: 14.5px; line-height: 1.75; border-left: 3px solid;
+}
+.callout-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.callout.info    { background: rgba(0,163,82,0.06);  border-color: var(--jkuat-green3); }
+.callout.info    .callout-label { color: var(--jkuat-green3); }
+.callout.warning { background: rgba(204,0,0,0.06);   border-color: var(--jkuat-red); }
+.callout.warning .callout-label { color: #ff6666; }
+.callout.tip     { background: rgba(0,163,82,0.05);  border-color: #5ae0a0; }
+.callout.tip     .callout-label { color: #5ae0a0; }
+.callout.analogy { background: rgba(255,184,0,0.06); border-color: var(--jkuat-gold); }
+.callout.analogy .callout-label { color: var(--jkuat-gold); }
+
+/* ── CODE ── */
+.code-wrap {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; margin: 14px 0; position: relative;
+}
+.code-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.code-dots { display: flex; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r { background: #ff5f57; } .dot.y { background: #ffbd2e; } .dot.g { background: #28ca41; }
+.code-lang { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+.copy-btn {
+  background: var(--surface3); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 4px 10px; font-size: 11px; color: var(--muted);
+  cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--bright); border-color: var(--jkuat-green3); }
+.copy-btn.copied { color: var(--jkuat-green3); border-color: var(--jkuat-green3); }
+pre {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  line-height: 1.8; padding: 20px 24px; overflow-x: auto; color: #c9d1e9;
+}
+.kw { color: #c792ea; } .fn { color: #82aaff; } .st { color: #c3e88d; }
+.cm { color: #3a5040; font-style: italic; } .nm { color: #f78c6c; }
+.bi { color: #89ddff; } .op { color: #89ddff; } .va { color: #eeffff; } .cl { color: #ffcb6b; }
+
+/* ── ANNOTATION TABLE ── */
+.anno-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+.anno-table tr { border-bottom: 1px solid var(--border); }
+.anno-table tr:last-child { border-bottom: none; }
+.anno-table td { padding: 9px 10px; }
+.anno-table td:first-child {
+  font-family: 'JetBrains Mono', monospace; color: var(--jkuat-green3);
+  font-size: 12px; white-space: nowrap; padding-right: 20px; width: 1%;
+}
+.anno-table td:last-child { color: var(--muted); }
+
+/* ── DIFF ── */
+.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+@media (max-width: 640px) { .diff-grid { grid-template-columns: 1fr; } }
+.diff-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.diff-label.bad { color: #ff6666; } .diff-label.good { color: var(--jkuat-green3); }
+
+/* ── YOUTUBE EMBED ── */
+.yt-embed-wrap {
+  margin: 16px 0;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border2);
+  background: #000;
+  position: relative;
+}
+.yt-embed-label {
+  background: var(--surface2); border-bottom: 1px solid var(--border2);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text);
+}
+.yt-embed-label .yt-badge {
+  background: #ff0000; color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px;
+  letter-spacing: 1px; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+.yt-embed-label .yt-title { font-weight: 600; color: var(--bright); }
+.yt-frame {
+  width: 100%; aspect-ratio: 16/9; border: none; display: block;
+}
+.yt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+@media (max-width: 640px) { .yt-grid { grid-template-columns: 1fr; } }
+
+/* ── QUIZ ── */
+.quiz-wrap {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 20px; margin-top: 14px;
+}
+.quiz-q { font-size: 15px; font-weight: 600; color: var(--bright); margin-bottom: 14px; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  background: var(--surface3); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 12px 16px; font-size: 14px; cursor: pointer;
+  transition: all 0.15s; display: flex; align-items: center; gap: 12px;
+  font-family: 'Outfit', sans-serif; color: var(--text); text-align: left; width: 100%;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--jkuat-green3); color: var(--bright); }
+.quiz-opt.correct { background: rgba(0,163,82,0.1); border-color: var(--jkuat-green3); color: var(--jkuat-green3); }
+.quiz-opt.wrong   { background: rgba(204,0,0,0.1);  border-color: var(--jkuat-red); color: #ff6666; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 12px; font-size: 14px; padding: 12px 16px; border-radius: 8px; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: rgba(0,163,82,0.1); border: 1px solid var(--jkuat-green3); color: var(--jkuat-green3); }
+.quiz-feedback.wrong   { background: rgba(204,0,0,0.1);  border: 1px solid var(--jkuat-red); color: #ff6666; }
+.quiz-retry {
+  margin-top: 10px; background: none; border: 1px solid var(--border2);
+  border-radius: 6px; padding: 6px 14px; font-size: 12px; color: var(--muted);
+  cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.15s;
+}
+.quiz-retry:hover { border-color: var(--jkuat-green3); color: var(--jkuat-green3); }
+
+/* ── CONCEPT CARDS ── */
+.concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 14px 0; }
+.concept-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px; transition: all 0.15s;
+}
+.concept-card:hover { border-color: var(--jkuat-green3); transform: translateY(-2px); }
+.concept-icon { font-size: 22px; margin-bottom: 8px; }
+.concept-name { font-size: 13px; font-weight: 700; color: var(--bright); margin-bottom: 4px; }
+.concept-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── PSEUDOCODE ── */
+.pseudo {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-left: 3px solid var(--jkuat-gold);
+  border-radius: 0 12px 12px 0;
+  padding: 18px 22px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; line-height: 2; color: var(--text); margin: 14px 0;
+}
+.pseudo .pk { color: var(--jkuat-gold); font-weight: 700; }
+.pseudo .ind  { padding-left: 24px; display: block; }
+.pseudo .ind2 { padding-left: 48px; display: block; }
+
+/* ── SCROLL TOP ── */
+#scroll-top {
+  position: fixed; bottom: 30px; right: 30px;
+  width: 44px; height: 44px;
+  background: var(--jkuat-green); border: 2px solid var(--jkuat-gold);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transform: translateY(10px);
+  transition: all 0.3s; color: #fff; z-index: 90;
+}
+#scroll-top.show { opacity: 1; transform: translateY(0); }
+#scroll-top:hover { background: var(--jkuat-green2); }
+
+/* ── NOTE ── */
+.note {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 14px 18px; font-size: 13.5px;
+  margin: 12px 0; color: var(--text);
+}
+.note-icon { font-size: 18px; flex-shrink: 0; }
+
+/* ── INLINE CODE ── */
+code {
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  color: var(--jkuat-green3); background: var(--surface2);
+  padding: 2px 6px; border-radius: 4px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border2);
+  padding: 40px 24px;
+  text-align: center;
+}
+.footer-stripe { display: flex; height: 5px; }
+.footer-inner { max-width: 600px; margin: 0 auto; }
+.footer-logo { font-weight: 800; font-size: 18px; color: var(--jkuat-green3); }
+.footer-text { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.footer-text strong { color: var(--text); }
+
+/* ── HIDDEN BY SEARCH ── */
+.q-card.hidden { display: none; }
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.hero-inner { animation: fade-up 0.6s ease forwards; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-logo">
+    <div class="logo-title">BBIT 1.2</div>
+    <div class="logo-sub">Introduction to Computer Programming</div>
+    <div class="logo-group">Group 3</div>
+  </div>
+  <div class="nav-section-label">Section A — Core + OOP</div>
+  <div class="nav-item" data-target="a1"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>Reading Input</div>
+  <div class="nav-item" data-target="a2"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>If-elif-else Grading</div>
+  <div class="nav-item" data-target="a3"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>elif Ordering</div>
+  <div class="nav-item" data-target="a4"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>Inheritance</div>
+  <div class="nav-item" data-target="a5"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>Polymorphism</div>
+  <div class="nav-item" data-target="a6"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>Encapsulation</div>
+  <div class="nav-item" data-target="a7"><span class="nav-dot" style="background:var(--jkuat-green3)"></span>Abstraction</div>
+  <div class="nav-section-label">Section B — Loops + Errors</div>
+  <div class="nav-item" data-target="b1"><span class="nav-dot" style="background:var(--jkuat-gold)"></span>While Loop Validation</div>
+  <div class="nav-item" data-target="b2"><span class="nav-dot" style="background:var(--jkuat-gold)"></span>ValueError</div>
+  <div class="nav-item" data-target="b3"><span class="nav-dot" style="background:var(--jkuat-gold)"></span>Pseudocode</div>
+  <div class="nav-section-label">Section C — Functions</div>
+  <div class="nav-item" data-target="c1"><span class="nav-dot" style="background:#5ae0a0"></span>calculate_bmi</div>
+  <div class="nav-item" data-target="c2"><span class="nav-dot" style="background:#5ae0a0"></span>Calling Functions</div>
+  <div class="nav-item" data-target="c3"><span class="nav-dot" style="background:#5ae0a0"></span>Parameters vs Arguments</div>
+  <div class="nav-section-label">Section D — Full Program</div>
+  <div class="nav-item" data-target="d1"><span class="nav-dot" style="background:#ff6666"></span>Grade Management System</div>
+</nav>
+
+<div id="overlay"></div>
+
+<!-- MENU BTN -->
+<button id="menu-btn" aria-label="Toggle navigation">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- THEME TOGGLE BTN -->
+<button id="theme-btn" aria-label="Toggle dark mode">
+  <span id="theme-icon">🌙</span>
+</button>
+
+<!-- HEADER -->
+<header>
+  <div class="jkuat-stripe">
+    <div class="stripe-green"></div>
+    <div class="stripe-gold"></div>
+    <div class="stripe-red"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-bg"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-badge">JKUAT — SOBE</div>
+    <h1><span class="green">BBIT 1.2</span> Introduction to<br><span class="gold">Computer Programming</span></h1>
+    <div class="hero-quote">
+      "The way to learn a programming language is by writing programmes in it."
+      <cite>— Dennis Ritchie, Creator of C</cite>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-pill">📚 <strong>Course:</strong> BBIT 1.2</div>
+      <div class="meta-pill">👥 <strong>Group 3</strong></div>
+      <div class="meta-pill">✍️ <strong>Compiled by:</strong> Darwin Osteen</div>
+      <div class="meta-pill">🐍 <strong>Language:</strong> Python 3</div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">Sections</span></div>
+      <div class="stat"><span class="stat-num">12</span><span class="stat-label">Topics</span></div>
+      <div class="stat"><span class="stat-num">4</span><span class="stat-label">OOP Pillars</span></div>
+      <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Quizzes</span></div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search topics — input, inheritance, loops, OOP…">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+  </div>
+  <div class="jkuat-stripe-bottom">
+    <div class="stripe-red" style="flex:1"></div>
+    <div class="stripe-gold" style="flex:1"></div>
+    <div class="stripe-green" style="flex:3"></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ─── OOP INTRO CARD ─── -->
+<div class="section-header" id="section-a">
+  <span class="section-tag tag-a">Section A</span>
+  <span class="section-title">Core Python + Object-Oriented Programming</span>
+  <div class="section-line"></div>
+</div>
+
+<!-- OOP VIDEO + PILLARS -->
+<div class="q-card force-visible" style="margin-bottom:20px">
+  <div class="q-header" style="cursor:default">
+    <div class="q-num" style="color:var(--jkuat-gold)">OOP</div>
+    <div class="q-title-wrap">
+      <div class="q-title">The 4 Pillars of OOP — Watch this first</div>
+      <div class="q-meta">Encapsulation · Inheritance · Polymorphism · Abstraction</div>
+    </div>
+  </div>
+  <div style="padding:0 24px 24px; display:block; border-top:1px solid var(--border)">
+    <div class="concept-grid" style="margin-top:18px">
+      <div class="concept-card">
+        <div class="concept-icon">🧱</div>
+        <div class="concept-name">Encapsulation</div>
+        <div class="concept-desc">Bundle data + methods together. Hide internal details from the outside.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">👨‍👧</div>
+        <div class="concept-name">Inheritance</div>
+        <div class="concept-desc">Child class acquires properties and behaviours from a parent class.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">🎭</div>
+        <div class="concept-name">Polymorphism</div>
+        <div class="concept-desc">One interface, many forms. Same method name, different behaviour per class.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon">🎨</div>
+        <div class="concept-name">Abstraction</div>
+        <div class="concept-desc">Hide complexity; show only what's necessary. Drive a car without knowing combustion.</div>
+      </div>
+    </div>
+    <!-- MAIN OOP VIDEO — Darwin's link -->
+    <div class="yt-embed-wrap" style="margin-top:20px">
+      <div class="yt-embed-label">
+        <span class="yt-badge">YouTube</span>
+        <span class="yt-title">Python Full Course — OOP Section (recommended by Darwin)</span>
+      </div>
+      <iframe class="yt-frame" src="https://www.youtube.com/embed/ix9cRaBkVe0?start=23552" title="Python OOP" loading="lazy" allowfullscreen></iframe>
+    </div>
+    <!-- SECONDARY OOP VIDEOS -->
+    <div class="yt-grid">
+      <div class="yt-embed-wrap" style="margin:0">
+        <div class="yt-embed-label">
+          <span class="yt-badge">YouTube</span>
+          <span class="yt-title">OOP in Python — Corey Schafer</span>
+        </div>
+        <iframe class="yt-frame" src="https://www.youtube.com/embed/ZDa-Z5JzLYM" title="Video 2" loading="lazy" allowfullscreen></iframe>
+      </div>
+      <div class="yt-embed-wrap" style="margin:0">
+        <div class="yt-embed-label">
+          <span class="yt-badge">YouTube</span>
+          <span class="yt-title">4 Pillars of OOP — Mosh</span>
+        </div>
+        <iframe class="yt-frame" src="https://www.youtube.com/embed/pTB0EiLXUC8?start=16" title="Video 3" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-I -->
+<div class="q-card" id="a1" data-keywords="input integer convert score read user">
+  <div class="q-header">
+    <div class="q-num">A·I</div>
+    <div class="q-title-wrap">
+      <div class="q-title">Read an exam score from the user, convert to integer, store in <code>score</code></div>
+      <div class="q-meta">Topic: input() · int() · type conversion · variables</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        <strong>input()</strong> is like asking someone a question out loud — they speak back, and whatever they say comes back as <em>text</em> (a string). Even if they say "90", Python sees it as the <em>word</em> "90", not the <em>number</em> 90. You can't do maths on text, so you wrap it with <strong>int()</strong> to convert it to a whole number.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy</div>
+        A cashier reads a price tag that says "250". They read the text "250", but to add it to your total, they need to treat it as the <em>number</em> 250. <code>int()</code> does exactly that — converts text into a number you can calculate with.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="va">score</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">"Enter your exam score: "</span>))</pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>input("...")</td><td>Shows the prompt, waits for the user to type. Always returns a <strong>string</strong>.</td></tr>
+        <tr><td>int(...)</td><td>Converts the string to an <strong>integer</strong> so you can do maths.</td></tr>
+        <tr><td>score =</td><td>Stores the result in a variable for later use.</td></tr>
+      </table>
+      <div class="callout warning">
+        <div class="callout-label">⚠️ Watch out</div>
+        If the user types "eighty" instead of "80", <code>int()</code> crashes with a <strong>ValueError</strong>. See B-II for how to handle this safely.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="1">
+        <div class="quiz-q">What does <code>input()</code> always return, regardless of what the user types?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">An integer</button>
+          <button class="quiz-opt" data-idx="1">A string</button>
+          <button class="quiz-opt" data-idx="2">A float</button>
+          <button class="quiz-opt" data-idx="3">A boolean</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-II -->
+<div class="q-card" id="a2" data-keywords="if elif else grade pass fail conditions grading">
+  <div class="q-header">
+    <div class="q-num">A·II</div>
+    <div class="q-title-wrap">
+      <div class="q-title">if-elif-else block: assign letter grade + print Pass/Fail</div>
+      <div class="q-meta">Topic: conditionals · elif chains · boolean expressions</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        An <strong>if-elif-else</strong> chain is like a bouncer checking questions one at a time. As soon as one condition is <code>True</code>, it acts and <em>immediately skips all the rest</em>. It never goes back to check further conditions once it finds a match.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy</div>
+        Think of a HELB eligibility form: "Are you below 18? Are you 18–25? Are you over 25?" As soon as one box is ticked, you stop. You don't check the rest.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="va">score</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">"Enter your exam score: "</span>))
+
+<span class="kw">if</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">90</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'A'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">80</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'B'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">70</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'C'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">60</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'D'</span>
+<span class="kw">else</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'F'</span>
+
+<span class="kw">if</span> <span class="va">grade</span> <span class="kw">in</span> [<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>]:
+    <span class="bi">print</span>(<span class="st">'Pass'</span>)
+<span class="kw">else</span>:
+    <span class="bi">print</span>(<span class="st">'Fail'</span>)</pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>elif score >= 80</td><td>Only runs when score was already confirmed below 90 — no need to write score &lt; 90 again.</td></tr>
+        <tr><td>else</td><td>Catch-all — catches anything below 60 without writing score &lt; 60.</td></tr>
+        <tr><td>grade in [...]</td><td>Checks membership in a list. Cleaner than grade=='A' or grade=='B' or grade=='C'.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="2">
+        <div class="quiz-q">A student scores 75. What grade do they get?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">B</button>
+          <button class="quiz-opt" data-idx="1">D</button>
+          <button class="quiz-opt" data-idx="2">C</button>
+          <button class="quiz-opt" data-idx="3">F</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-III -->
+<div class="q-card" id="a3" data-keywords="elif ordering order conditions bug dead code">
+  <div class="q-header">
+    <div class="q-num">A·III</div>
+    <div class="q-title-wrap">
+      <div class="q-title">What happens if <code>elif score &ge; 60</code> is placed BEFORE <code>elif score &ge; 90</code>?</div>
+      <div class="q-meta">Topic: elif ordering · logical bugs · dead code</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Comparison</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Key concept</div>
+        Python checks conditions <strong>top to bottom and stops at the first true one</strong>. A score of 95 is also ≥ 60 — so if that check comes first, the student gets 'D' and Python <em>never reaches</em> the condition for 'A'. Those upper checks become <strong>dead code</strong> — code that can never execute.
+      </div>
+      <div class="callout tip">
+        <div class="callout-label">💡 Rule of thumb</div>
+        With overlapping ranges, always check the <strong>highest threshold first</strong>, working down. Place the tightest filter at the top so wider conditions below don't accidentally catch more specific cases.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="diff-grid">
+        <div class="code-wrap">
+          <div class="code-bar" style="background:#140808"><div class="diff-label bad">✗ WRONG ORDER</div></div>
+          <pre style="font-size:12px"><span class="kw">if</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">60</span>:   <span class="cm"># 95 matches here!</span>
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'D'</span>   <span class="cm"># Wrong — stops here</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">70</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'C'</span>   <span class="cm"># DEAD CODE</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">80</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'B'</span>   <span class="cm"># DEAD CODE</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">90</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'A'</span>   <span class="cm"># DEAD CODE</span></pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-bar" style="background:#081408"><div class="diff-label good">✓ CORRECT ORDER</div></div>
+          <pre style="font-size:12px"><span class="kw">if</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">90</span>:   <span class="cm"># 95 → 'A' ✓</span>
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'A'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">80</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'B'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">70</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'C'</span>
+<span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">60</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="st">'D'</span></pre>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="0">
+        <div class="quiz-q">In the WRONG order, what grade does a score of 95 get?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">D — because ≥60 matches first and Python stops</button>
+          <button class="quiz-opt" data-idx="1">A — Python still finds the correct one</button>
+          <button class="quiz-opt" data-idx="2">An error is thrown</button>
+          <button class="quiz-opt" data-idx="3">F — nothing matched</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-IV INHERITANCE -->
+<div class="q-card" id="a4" data-keywords="inheritance class parent child subclass animal dog override oop pillar">
+  <div class="q-header">
+    <div class="q-num">A·IV</div>
+    <div class="q-title-wrap">
+      <div class="q-title">OOP Pillar 2 — Inheritance: parent <code>Animal</code>, subclass <code>Dog</code></div>
+      <div class="q-meta">Topic: class inheritance · method overriding · DRY principle</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+      <button class="tab-btn" data-tab="video">Video</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        <strong>Inheritance</strong> lets one class automatically get all the attributes and methods of another. The child class can then <em>extend</em> (add new things) or <em>override</em> (replace) any method from the parent — while keeping everything else for free. No copy-pasting code.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy</div>
+        Think of a <strong>Matatu</strong>. All matatus are Vehicles — engine, wheels, can move. The matatu <em>inherits</em> all that from the Vehicle blueprint. But it also adds its own things: route number, tout, set capacity. The matatu didn't redesign "movement" — it just extended Vehicle.
+      </div>
+      <div class="callout tip">
+        <div class="callout-label">💡 Why use it?</div>
+        <strong>DRY — Don't Repeat Yourself.</strong> Write shared behaviour once in the parent. Every child class gets it automatically. Change it in one place — not in 10 classes.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="cm"># ── PARENT CLASS ──────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">Animal</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">name</span>):
+        <span class="va">self</span>.<span class="va">name</span> <span class="op">=</span> <span class="va">name</span>
+
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.name}</span><span class="st"> makes a sound."</span>
+
+    <span class="kw">def</span> <span class="fn">breathe</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.name}</span><span class="st"> breathes air."</span>
+
+
+<span class="cm"># ── CHILD CLASS ───────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">Dog</span>(<span class="cl">Animal</span>):    <span class="cm"># Animal in brackets = inherits from Animal</span>
+
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="va">self</span>):         <span class="cm"># OVERRIDES parent's speak()</span>
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.name}</span><span class="st"> says: Woof!"</span>
+
+    <span class="kw">def</span> <span class="fn">fetch</span>(<span class="va">self</span>):         <span class="cm"># NEW — only Dog has this</span>
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.name}</span><span class="st"> fetches the ball!"</span>
+
+
+<span class="cm"># ── TESTING ───────────────────────────────────</span>
+<span class="va">rex</span> <span class="op">=</span> <span class="cl">Dog</span>(<span class="st">"Rex"</span>)
+<span class="bi">print</span>(<span class="va">rex</span>.<span class="fn">speak</span>())    <span class="cm"># Rex says: Woof!   ← OVERRIDDEN</span>
+<span class="bi">print</span>(<span class="va">rex</span>.<span class="fn">breathe</span>())  <span class="cm"># Rex breathes air. ← INHERITED</span>
+<span class="bi">print</span>(<span class="va">rex</span>.<span class="fn">fetch</span>())    <span class="cm"># Rex fetches the ball!</span></pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>class Dog(Animal)</td><td>The brackets declare Animal as the parent. Dog inherits everything from it.</td></tr>
+        <tr><td>speak() in Dog</td><td>Replaces Animal's version. Python finds Dog's speak() first.</td></tr>
+        <tr><td>breathe()</td><td>Not written in Dog — but rex.breathe() works because it was inherited.</td></tr>
+        <tr><td>self</td><td>Always the first parameter. Refers to the specific object calling the method.</td></tr>
+        <tr><td>__init__</td><td>Constructor — runs when you create an object. Dog uses Animal's since it doesn't define its own.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="1">
+        <div class="quiz-q">What does <code>rex.breathe()</code> return? (Dog doesn't define breathe)</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">AttributeError — Dog has no breathe()</button>
+          <button class="quiz-opt" data-idx="1">"Rex breathes air." — inherited from Animal</button>
+          <button class="quiz-opt" data-idx="2">None — undefined methods return None</button>
+          <button class="quiz-opt" data-idx="3">"Dog breathes air." — uses the class name</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="video">
+      <div class="yt-embed-wrap" style="margin-top:16px">
+        <div class="yt-embed-label">
+          <span class="yt-badge">YouTube</span>
+          <span class="yt-title">Python OOP — Inheritance (Corey Schafer)</span>
+        </div>
+        <iframe class="yt-frame" src="https://www.youtube.com/embed/ix9cRaBkVe0?start=23552" title="Video" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-V POLYMORPHISM -->
+<div class="q-card" id="a5" data-keywords="polymorphism shape circle rectangle duck typing process oop pillar">
+  <div class="q-header">
+    <div class="q-num">A·V</div>
+    <div class="q-title-wrap">
+      <div class="q-title">OOP Pillar 3 — Polymorphism: <code>process_shape()</code> with Circle and Rectangle</div>
+      <div class="q-meta">Topic: polymorphism · duck typing · no isinstance()</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+      <button class="tab-btn" data-tab="video">Video</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        <em>Poly</em> = many, <em>morph</em> = form. Polymorphism means different objects can respond to the <strong>same method call</strong> in their own unique way. Your function doesn't need to know what type of object it has — it just calls the method and trusts each object to handle it correctly.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy — M-Pesa</div>
+        When you tap "Send" on M-Pesa — sending to a Safaricom number, Airtel, bank, or paybill — the same action produces the right result for each. You don't need a different app per type. One action, many implementations. That's polymorphism.
+      </div>
+      <div class="note">
+        <span class="note-icon">💬</span>
+        <span>This is called <strong>Duck Typing</strong> in Python: "If it walks like a duck and quacks like a duck, treat it like a duck." Python only cares that the object has the methods being called — not what type it is.</span>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">import</span> <span class="va">math</span>
+
+<span class="kw">class</span> <span class="cl">Circle</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">radius</span>):
+        <span class="va">self</span>.<span class="va">radius</span> <span class="op">=</span> <span class="va">radius</span>
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="va">math</span>.<span class="va">pi</span> <span class="op">*</span> <span class="va">self</span>.<span class="va">radius</span> <span class="op">**</span> <span class="nm">2</span>
+    <span class="kw">def</span> <span class="fn">describe</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"Circle with radius </span><span class="va">{self.radius}</span><span class="st">"</span>
+
+<span class="kw">class</span> <span class="cl">Rectangle</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">width</span>, <span class="va">height</span>):
+        <span class="va">self</span>.<span class="va">width</span>  <span class="op">=</span> <span class="va">width</span>
+        <span class="va">self</span>.<span class="va">height</span> <span class="op">=</span> <span class="va">height</span>
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="va">self</span>.<span class="va">width</span> <span class="op">*</span> <span class="va">self</span>.<span class="va">height</span>
+    <span class="kw">def</span> <span class="fn">describe</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"Rectangle </span><span class="va">{self.width}</span><span class="st">x</span><span class="va">{self.height}</span><span class="st">"</span>
+
+<span class="cm"># No type-checking. Just calls .area() and .describe().
+# Any object with these methods will work — that's polymorphism.</span>
+<span class="kw">def</span> <span class="fn">process_shape</span>(<span class="va">shape</span>):
+    <span class="bi">print</span>(<span class="st">f"Shape: </span><span class="va">{shape.describe()}</span><span class="st">"</span>)
+    <span class="bi">print</span>(<span class="st">f"Area:  </span><span class="va">{shape.area():.2f}</span><span class="st">"</span>)
+
+<span class="fn">process_shape</span>(<span class="cl">Circle</span>(<span class="nm">5</span>))
+<span class="fn">process_shape</span>(<span class="cl">Rectangle</span>(<span class="nm">4</span>, <span class="nm">6</span>))</pre>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="3">
+        <div class="quiz-q">What would happen if you passed a Triangle (with area() and describe()) to process_shape()?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">TypeError — Triangle wasn't in the original code</button>
+          <button class="quiz-opt" data-idx="1">AttributeError — function only accepts Circle/Rectangle</button>
+          <button class="quiz-opt" data-idx="2">It crashes — no isinstance() check</button>
+          <button class="quiz-opt" data-idx="3">It works perfectly — duck typing, any object with area() and describe() is fine</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="video">
+      <div class="yt-embed-wrap" style="margin-top:16px">
+        <div class="yt-embed-label">
+          <span class="yt-badge">YouTube</span>
+          <span class="yt-title">Polymorphism in Python (Tech With Tim)</span>
+        </div>
+        <iframe class="yt-frame" src="https://www.youtube.com/embed/ZDa-Z5JzLYM" title="Video" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-VI ENCAPSULATION -->
+<div class="q-card" id="a6" data-keywords="encapsulation private public getter setter oop pillar">
+  <div class="q-header">
+    <div class="q-num">A·VI</div>
+    <div class="q-title-wrap">
+      <div class="q-title">OOP Pillar 1 — Encapsulation: private attributes, getters &amp; setters</div>
+      <div class="q-meta">Topic: encapsulation · private variables · data protection</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        <strong>Encapsulation</strong> means bundling data and the methods that operate on it into a single class — and <em>restricting direct access</em> to internal data. It protects data from being changed in invalid or accidental ways.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy — ATM machine</div>
+        An ATM encapsulates your balance. You can't reach in and change the number directly — you interact through controlled operations: withdraw, deposit, check balance. The bank hides the internals and exposes only safe, validated access. That's encapsulation.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">class</span> <span class="cl">BankAccount</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">owner</span>, <span class="va">balance</span>):
+        <span class="va">self</span>.<span class="va">owner</span>    <span class="op">=</span> <span class="va">owner</span>
+        <span class="va">self</span>.<span class="va">_balance</span> <span class="op">=</span> <span class="va">balance</span>  <span class="cm"># _balance is "private"</span>
+
+    <span class="kw">def</span> <span class="fn">get_balance</span>(<span class="va">self</span>):        <span class="cm"># GETTER — safe read</span>
+        <span class="kw">return</span> <span class="va">self</span>.<span class="va">_balance</span>
+
+    <span class="kw">def</span> <span class="fn">deposit</span>(<span class="va">self</span>, <span class="va">amount</span>):   <span class="cm"># VALIDATED write</span>
+        <span class="kw">if</span> <span class="va">amount</span> <span class="op">&gt;</span> <span class="nm">0</span>:
+            <span class="va">self</span>.<span class="va">_balance</span> <span class="op">+=</span> <span class="va">amount</span>
+            <span class="bi">print</span>(<span class="st">f"Deposited {amount}. Balance: {self._balance}"</span>)
+        <span class="kw">else</span>:
+            <span class="bi">print</span>(<span class="st">"Amount must be positive."</span>)
+
+    <span class="kw">def</span> <span class="fn">withdraw</span>(<span class="va">self</span>, <span class="va">amount</span>):
+        <span class="kw">if</span> <span class="nm">0</span> <span class="op">&lt;</span> <span class="va">amount</span> <span class="op">&lt;=</span> <span class="va">self</span>.<span class="va">_balance</span>:
+            <span class="va">self</span>.<span class="va">_balance</span> <span class="op">-=</span> <span class="va">amount</span>
+            <span class="bi">print</span>(<span class="st">f"Withdrew {amount}. Balance: {self._balance}"</span>)
+        <span class="kw">else</span>:
+            <span class="bi">print</span>(<span class="st">"Invalid withdrawal."</span>)
+
+<span class="va">acc</span> <span class="op">=</span> <span class="cl">BankAccount</span>(<span class="st">"Wanjiru"</span>, <span class="nm">5000</span>)
+<span class="va">acc</span>.<span class="fn">deposit</span>(<span class="nm">1000</span>)      <span class="cm"># Deposited 1000. Balance: 6000</span>
+<span class="va">acc</span>.<span class="fn">withdraw</span>(<span class="op">-</span><span class="nm">500</span>)     <span class="cm"># Invalid withdrawal.</span>
+<span class="bi">print</span>(<span class="va">acc</span>.<span class="fn">get_balance</span>()) <span class="cm"># 6000</span></pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>_balance</td><td>Single underscore = private by convention. Don't access it directly from outside.</td></tr>
+        <tr><td>get_balance()</td><td>Getter — safe read-only access to the private attribute.</td></tr>
+        <tr><td>deposit() / withdraw()</td><td>Setters with validation — can only change _balance when inputs are valid.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="2">
+        <div class="quiz-q">Why is encapsulation important?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">It makes code run faster</button>
+          <button class="quiz-opt" data-idx="1">It prevents other classes from existing</button>
+          <button class="quiz-opt" data-idx="2">It protects data integrity by controlling how attributes are accessed and modified</button>
+          <button class="quiz-opt" data-idx="3">It is required syntax for Python classes to work</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A-VII ABSTRACTION -->
+<div class="q-card" id="a7" data-keywords="abstraction abstract class method interface oop pillar hide complexity ABC">
+  <div class="q-header">
+    <div class="q-num">A·VII</div>
+    <div class="q-title-wrap">
+      <div class="q-title">OOP Pillar 4 — Abstraction: hiding complexity, showing only what's needed</div>
+      <div class="q-meta">Topic: abstraction · abstract classes · ABC module</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        <strong>Abstraction</strong> hides complex implementation details and exposes only the essential features. You interact with a simplified interface — you don't need to understand <em>how</em> it works internally, only <em>what</em> it does.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Kenyan analogy — Driving a car in Nairobi</div>
+        You press the accelerator and the car moves faster. You don't need to understand fuel injection, combustion, or gear ratios. The complex machinery is hidden. You just use the steering wheel and pedals — the simple public interface.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">from</span> <span class="va">abc</span> <span class="kw">import</span> <span class="cl">ABC</span>, <span class="fn">abstractmethod</span>
+
+<span class="cm"># Abstract class — a blueprint that can't be used directly</span>
+<span class="kw">class</span> <span class="cl">Shape</span>(<span class="cl">ABC</span>):
+    <span class="op">@</span><span class="fn">abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="va">self</span>):
+        <span class="kw">pass</span>    <span class="cm"># subclasses MUST implement this</span>
+
+    <span class="op">@</span><span class="fn">abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">perimeter</span>(<span class="va">self</span>):
+        <span class="kw">pass</span>
+
+<span class="cm"># Concrete implementation — provides actual logic</span>
+<span class="kw">class</span> <span class="cl">Circle</span>(<span class="cl">Shape</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">r</span>): <span class="va">self</span>.<span class="va">r</span> <span class="op">=</span> <span class="va">r</span>
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="va">self</span>):      <span class="kw">return</span> <span class="nm">3.14</span> <span class="op">*</span> <span class="va">self</span>.<span class="va">r</span> <span class="op">**</span> <span class="nm">2</span>
+    <span class="kw">def</span> <span class="fn">perimeter</span>(<span class="va">self</span>): <span class="kw">return</span> <span class="nm">2</span> <span class="op">*</span> <span class="nm">3.14</span> <span class="op">*</span> <span class="va">self</span>.<span class="va">r</span>
+
+<span class="va">c</span> <span class="op">=</span> <span class="cl">Circle</span>(<span class="nm">5</span>)
+<span class="bi">print</span>(<span class="va">c</span>.<span class="fn">area</span>())        <span class="cm"># 78.5</span>
+<span class="bi">print</span>(<span class="va">c</span>.<span class="fn">perimeter</span>())   <span class="cm"># 31.4</span>
+
+<span class="cm"># Shape() alone would raise TypeError — can't instantiate abstract class</span></pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>ABC</td><td>Abstract Base Class — makes Shape a template that cannot be instantiated directly.</td></tr>
+        <tr><td>@abstractmethod</td><td>Forces every subclass to implement this method. If they don't, TypeError is raised.</td></tr>
+        <tr><td>Shape()</td><td>Cannot be created directly — it's a blueprint only. Must use a concrete subclass like Circle.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="1">
+        <div class="quiz-q">What happens if a subclass doesn't implement all abstract methods?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">Python silently ignores the missing methods</button>
+          <button class="quiz-opt" data-idx="1">Python raises a TypeError when you try to instantiate the class</button>
+          <button class="quiz-opt" data-idx="2">The abstract methods return None automatically</button>
+          <button class="quiz-opt" data-idx="3">Python uses the parent's abstract implementation</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECTION B ─── -->
+<div class="section-header" id="section-b">
+  <span class="section-tag tag-b">Section B</span>
+  <span class="section-title">While Loops, Errors &amp; Pseudocode</span>
+  <div class="section-line"></div>
+</div>
+
+<!-- B-I -->
+<div class="q-card" id="b1" data-keywords="while loop validation percentage mark 0 100 break continue">
+  <div class="q-header">
+    <div class="q-num">B·I</div>
+    <div class="q-title-wrap">
+      <div class="q-title">While loop that keeps asking for a valid percentage mark (0–100)</div>
+      <div class="q-meta">Topic: while loops · break · continue · input validation</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+      <button class="tab-btn" data-tab="video">Video</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        Setting the condition to <code>True</code> means the loop runs forever — until it hits a <code>break</code>. This is the standard pattern for input validation: keep asking until the answer is valid, then escape.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Analogy — Safaricom SIM registration</div>
+        The system keeps asking for your ID number until it's valid. Type garbage — it asks again. Type an ID that's too short — asks again. Only when the ID is valid does it proceed (break). That's a validation loop.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">while</span> <span class="kw">True</span>:        <span class="cm"># loop forever until we break</span>
+    <span class="kw">try</span>:
+        <span class="va">mark</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">"Enter a percentage mark (0–100): "</span>))
+    <span class="kw">except</span> <span class="bi">ValueError</span>:
+        <span class="bi">print</span>(<span class="st">"Invalid mark. Enter a value between 0 and 100."</span>)
+        <span class="kw">continue</span>       <span class="cm"># skip to top of loop</span>
+
+    <span class="kw">if</span> <span class="nm">0</span> <span class="op">&lt;=</span> <span class="va">mark</span> <span class="op">&lt;=</span> <span class="nm">100</span>:
+        <span class="bi">print</span>(<span class="st">f"Mark recorded: </span><span class="va">{mark}</span><span class="st">"</span>)
+        <span class="kw">break</span>          <span class="cm"># valid — exit loop</span>
+    <span class="kw">else</span>:
+        <span class="bi">print</span>(<span class="st">"Invalid mark. Enter a value between 0 and 100."</span>)</pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>while True</td><td>Loops forever. Only exits via break. Called an "infinite loop with a guarded exit".</td></tr>
+        <tr><td>try / except</td><td>Handles risky int() conversion. If text is typed, except runs instead of crashing.</td></tr>
+        <tr><td>0 &lt;= mark &lt;= 100</td><td>Chained comparison — Python allows this. Same as mark >= 0 and mark <= 100.</td></tr>
+        <tr><td>break</td><td>Exits the while loop immediately.</td></tr>
+        <tr><td>continue</td><td>Skips rest of this iteration and jumps back to the top.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="2">
+        <div class="quiz-q">The user types "abc". What happens?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">The program crashes with ValueError</button>
+          <button class="quiz-opt" data-idx="1">mark gets stored as "abc"</button>
+          <button class="quiz-opt" data-idx="2">except block runs, prints error, loop continues asking</button>
+          <button class="quiz-opt" data-idx="3">break is called</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="video">
+      <div class="yt-embed-wrap" style="margin-top:16px">
+        <div class="yt-embed-label">
+          <span class="yt-badge">YouTube</span>
+          <span class="yt-title">Python While Loops — Corey Schafer</span>
+        </div>
+        <iframe class="yt-frame" src="https://www.youtube.com/embed/pTB0EiLXUC8?start=16" title="Video" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B-II -->
+<div class="q-card" id="b2" data-keywords="valueerror exception handling try except eighty crash prevent">
+  <div class="q-header">
+    <div class="q-num">B·II</div>
+    <div class="q-title-wrap">
+      <div class="q-title">What error occurs if the user types "eighty"? How do you prevent it?</div>
+      <div class="q-meta">Topic: ValueError · try/except · exception handling</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout warning">
+        <div class="callout-label">⚠️ The Error — ValueError</div>
+        <code>int("eighty")</code> raises a <strong>ValueError</strong>. Python cannot convert the word into an integer. Without protection, the entire program crashes:<br><br>
+        <code style="color:#ff6666">ValueError: invalid literal for int() with base 10: 'eighty'</code>
+      </div>
+      <div class="callout tip">
+        <div class="callout-label">💡 Prevention — try/except</div>
+        Wrap the risky code in a <code>try</code> block. Python tries it; if it raises the named error, the <code>except</code> block runs instead of crashing. Program continues normally.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">try</span>:
+    <span class="va">mark</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">"Enter mark: "</span>))  <span class="cm"># risky line</span>
+    <span class="bi">print</span>(<span class="st">f"You entered: </span><span class="va">{mark}</span><span class="st">"</span>)
+<span class="kw">except</span> <span class="bi">ValueError</span>:
+    <span class="bi">print</span>(<span class="st">"That's not a number! Enter digits only."</span>)
+    <span class="cm"># program continues — does NOT crash</span></pre>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="0">
+        <div class="quiz-q">What type of error does <code>int("eighty")</code> raise?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">ValueError</button>
+          <button class="quiz-opt" data-idx="1">TypeError</button>
+          <button class="quiz-opt" data-idx="2">SyntaxError</button>
+          <button class="quiz-opt" data-idx="3">AttributeError</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B-III -->
+<div class="q-card" id="b3" data-keywords="pseudocode algorithm design planning blueprint computational thinking">
+  <div class="q-header">
+    <div class="q-num">B·III</div>
+    <div class="q-title-wrap">
+      <div class="q-title">What is pseudocode? Write pseudocode for the validation loop.</div>
+      <div class="q-meta">Topic: pseudocode · algorithm design · computational thinking</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Pseudocode</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 What is pseudocode?</div>
+        <strong>Pseudocode</strong> is a planning tool — write the <em>logic</em> in structured plain English before writing actual code. It's not Python, not any specific language — just human-readable steps. Goal: think through <strong>what should happen</strong> before worrying about <strong>how to write it</strong>.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 The blueprint analogy</div>
+        An architect draws a blueprint before construction. The blueprint is not the building — it's the plan. Pseudocode is your software blueprint. It separates logic design from syntax so you can solve them one at a time.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="pseudo">
+        <span><span class="pk">START</span></span><br>
+        <span><span class="pk">REPEAT</span> indefinitely:</span>
+        <span class="ind">Display "Enter a percentage mark (0 to 100):"</span>
+        <span class="ind">Read the user's input as raw text</span><br>
+        <span class="ind"><span class="pk">IF</span> input is not a whole number <span class="pk">THEN</span></span>
+        <span class="ind2">Display "Invalid mark. Enter a value between 0 and 100."</span>
+        <span class="ind2">Go back to top of loop</span><br>
+        <span class="ind">Convert input to integer, store as mark</span><br>
+        <span class="ind"><span class="pk">IF</span> mark is between 0 and 100 inclusive <span class="pk">THEN</span></span>
+        <span class="ind2">Display "Mark recorded: " + mark</span>
+        <span class="ind2">Exit the loop</span>
+        <span class="ind"><span class="pk">ELSE</span></span>
+        <span class="ind2">Display "Invalid mark. Enter a value between 0 and 100."</span><br>
+        <span><span class="pk">END REPEAT</span></span><br>
+        <span><span class="pk">END</span></span>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="3">
+        <div class="quiz-q">What is the main benefit of writing pseudocode before actual code?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">It runs faster than Python</button>
+          <button class="quiz-opt" data-idx="1">It is required before submitting assignments</button>
+          <button class="quiz-opt" data-idx="2">It can be compiled into machine code</button>
+          <button class="quiz-opt" data-idx="3">It separates logic design from syntax, so you can focus on one problem at a time</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECTION C ─── -->
+<div class="section-header" id="section-c">
+  <span class="section-tag tag-c">Section C</span>
+  <span class="section-title">Functions — calculate_bmi (Group Assignment)</span>
+  <div class="section-line"></div>
+</div>
+
+<!-- C-I -->
+<div class="q-card" id="c1" data-keywords="function def bmi calculate docstring return round weight height">
+  <div class="q-header">
+    <div class="q-num">C·I</div>
+    <div class="q-title-wrap">
+      <div class="q-title">Write the <code>calculate_bmi</code> function with a docstring</div>
+      <div class="q-meta">Topic: def · docstrings · return · round()</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Plain English</div>
+        A <strong>function</strong> is a named, reusable block of code. Write the BMI formula once; call it whenever needed. Functions make your code easier to test, read, and update.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 Analogy — Chapati recipe</div>
+        A recipe card for chapati is like a function. You follow the card every time you want chapati — you don't reinvent it. Pass in different amounts (arguments) and it adjusts. One recipe, many uses.
+      </div>
+      <div class="callout tip">
+        <div class="callout-label">💡 Docstrings</div>
+        A <strong>docstring</strong> is a triple-quoted string right after the function signature. It documents what the function does, its inputs, and output. Not executed — just documentation. Accessible via <code>help(calculate_bmi)</code>.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="kw">def</span> <span class="fn">calculate_bmi</span>(<span class="va">weight_kg</span>, <span class="va">height_m</span>):
+    <span class="st">"""
+    Calculate the Body Mass Index (BMI).
+
+    Parameters:
+        weight_kg (float): Person's weight in kilograms.
+        height_m  (float): Person's height in metres.
+
+    Returns:
+        float: BMI rounded to 2 decimal places.
+    """</span>
+    <span class="va">bmi_value</span> <span class="op">=</span> <span class="va">weight_kg</span> <span class="op">/</span> (<span class="va">height_m</span> <span class="op">**</span> <span class="nm">2</span>)
+    <span class="kw">return</span> <span class="bi">round</span>(<span class="va">bmi_value</span>, <span class="nm">2</span>)</pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>def</td><td>Keyword that starts a function definition.</td></tr>
+        <tr><td>weight_kg, height_m</td><td>Parameters — named placeholders for values passed in at call time.</td></tr>
+        <tr><td>"""..."""</td><td>Docstring — documentation. Not executed.</td></tr>
+        <tr><td>bmi_value</td><td>Meaningful variable name for the result (required by the question).</td></tr>
+        <tr><td>height_m ** 2</td><td>Height squared. ** = "to the power of".</td></tr>
+        <tr><td>round(..., 2)</td><td>Rounds to 2 decimal places. 22.857... → 22.86.</td></tr>
+        <tr><td>return</td><td>Sends the result back to the caller. Without return, function returns None.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="1">
+        <div class="quiz-q">What does a function return if it has no <code>return</code> statement?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">0</button>
+          <button class="quiz-opt" data-idx="1">None</button>
+          <button class="quiz-opt" data-idx="2">An empty string ""</button>
+          <button class="quiz-opt" data-idx="3">A TypeError</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C-II -->
+<div class="q-card" id="c2" data-keywords="call function result fstring format print 70 1.75">
+  <div class="q-header">
+    <div class="q-num">C·II</div>
+    <div class="q-title-wrap">
+      <div class="q-title">Call <code>calculate_bmi(weight=70, height=1.75)</code> and print with f-string</div>
+      <div class="q-meta">Topic: calling functions · f-strings · :.2f format specifier</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Calling a function</div>
+        To use a function, write its name followed by parentheses with the arguments. Whatever it <code>return</code>s comes back to where you called it. Store the result in a variable to use it later.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="va">result</span> <span class="op">=</span> <span class="fn">calculate_bmi</span>(<span class="va">weight_kg</span><span class="op">=</span><span class="nm">70</span>, <span class="va">height_m</span><span class="op">=</span><span class="nm">1.75</span>)
+<span class="bi">print</span>(<span class="st">f"Your BMI is: </span><span class="va">{result:.2f}</span><span class="st">"</span>)
+<span class="cm"># Output: Your BMI is: 22.86</span></pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>weight_kg=70</td><td>Keyword argument — named, self-documenting, order-independent.</td></tr>
+        <tr><td>{result:.2f}</td><td>In an f-string: :.2f formats as a float with exactly 2 decimal places.</td></tr>
+      </table>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="2">
+        <div class="quiz-q">What does <code>:.2f</code> do inside an f-string?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">Rounds to 2 significant figures</button>
+          <button class="quiz-opt" data-idx="1">Multiplies the number by 2</button>
+          <button class="quiz-opt" data-idx="2">Formats as a float with 2 decimal places</button>
+          <button class="quiz-opt" data-idx="3">Converts to a fraction</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C-III -->
+<div class="q-card" id="c3" data-keywords="parameter argument difference definition call">
+  <div class="q-header">
+    <div class="q-num">C·III</div>
+    <div class="q-title-wrap">
+      <div class="q-title">Difference between a parameter and an argument</div>
+      <div class="q-meta">Topic: parameters vs arguments · function vocabulary</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 The simplest way to remember it</div>
+        <strong>Parameter</strong> = the variable in the function <em>definition</em> — a named placeholder.<br>
+        <strong>Argument</strong> = the actual value you pass when you <em>call</em> the function.
+      </div>
+      <div class="callout analogy">
+        <div class="callout-label">🌍 KUCCPS form analogy</div>
+        A KUCCPS form has a field labelled "KCSE Index Number". That label is the <em>parameter</em>. The number you write in — "34123001234" — is the <em>argument</em>. The label is fixed in the form definition. What you fill in changes each time.
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="cm"># weight_kg and height_m are PARAMETERS (in the definition)</span>
+<span class="kw">def</span> <span class="fn">calculate_bmi</span>(<span class="va">weight_kg</span>, <span class="va">height_m</span>):  <span class="cm"># ← parameters</span>
+    ...
+
+<span class="cm"># 70 and 1.75 are ARGUMENTS (passed at call time)</span>
+<span class="fn">calculate_bmi</span>(<span class="nm">70</span>, <span class="nm">1.75</span>)               <span class="cm"># ← arguments</span></pre>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="0">
+        <div class="quiz-q">In <code>def greet(name):</code> — what is <code>name</code>?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">A parameter</button>
+          <button class="quiz-opt" data-idx="1">An argument</button>
+          <button class="quiz-opt" data-idx="2">A return value</button>
+          <button class="quiz-opt" data-idx="3">A global variable</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECTION D ─── -->
+<div class="section-header" id="section-d">
+  <span class="section-tag tag-d">Section D</span>
+  <span class="section-title">Student Grade Management System — Full Program</span>
+  <div class="section-line"></div>
+</div>
+
+<!-- D -->
+<div class="q-card" id="d1" data-keywords="grade management system get_grade collect_scores generate_report main enumerate append list dict modular">
+  <div class="q-header">
+    <div class="q-num">D</div>
+    <div class="q-title-wrap">
+      <div class="q-title">Complete program: <code>get_grade()</code>, <code>collect_scores()</code>, <code>generate_report()</code> and main</div>
+      <div class="q-meta">Topic: modular design · lists · dicts · enumerate · separation of concerns</div>
+    </div>
+    <svg class="q-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="q-body">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="explain">Explanation</button>
+      <button class="tab-btn" data-tab="code">Full Code</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="tab-panel active" data-panel="explain">
+      <div class="callout info">
+        <div class="callout-label">🧠 Modular design — Separation of Concerns</div>
+        Break a big problem into small, focused functions — each doing exactly one job. The main program only coordinates them. This is one of the most important software engineering habits.
+      </div>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-icon">🏷️</div>
+          <div class="concept-name">get_grade(score)</div>
+          <div class="concept-desc">Score in → letter grade out. Single responsibility.</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">📥</div>
+          <div class="concept-name">collect_scores(n)</div>
+          <div class="concept-desc">Handles all input — collects n valid scores. Returns a list.</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">📊</div>
+          <div class="concept-name">generate_report(scores)</div>
+          <div class="concept-desc">Calculates statistics from list. Returns a dictionary.</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-icon">🎯</div>
+          <div class="concept-name">Main program</div>
+          <div class="concept-desc">The coordinator — calls each function and displays output.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="code">
+      <div class="code-wrap">
+        <div class="code-bar"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><span class="code-lang">python — complete program</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><span class="cm"># ─────────────────────────────────────────────
+#  STUDENT GRADE MANAGEMENT SYSTEM
+#  BBIT 1.2 | JKUAT | Group 3
+# ─────────────────────────────────────────────</span>
+
+
+<span class="kw">def</span> <span class="fn">get_grade</span>(<span class="va">score</span>):
+    <span class="st">"""Return the letter grade for a score (0–100)."""</span>
+    <span class="kw">if</span>   <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">90</span>: <span class="kw">return</span> <span class="st">'A'</span>
+    <span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">80</span>: <span class="kw">return</span> <span class="st">'B'</span>
+    <span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">70</span>: <span class="kw">return</span> <span class="st">'C'</span>
+    <span class="kw">elif</span> <span class="va">score</span> <span class="op">&gt;=</span> <span class="nm">60</span>: <span class="kw">return</span> <span class="st">'D'</span>
+    <span class="kw">else</span>:             <span class="kw">return</span> <span class="st">'F'</span>
+
+
+<span class="kw">def</span> <span class="fn">collect_scores</span>(<span class="va">n</span>):
+    <span class="st">"""
+    Collect n valid integer scores (0–100) from the user.
+
+    Parameters:
+        n (int): Number of scores to collect.
+
+    Returns:
+        list: A list of n valid integer scores.
+    """</span>
+    <span class="va">scores</span> <span class="op">=</span> []
+
+    <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nm">1</span>, <span class="va">n</span> <span class="op">+</span> <span class="nm">1</span>):
+        <span class="kw">while</span> <span class="kw">True</span>:
+            <span class="kw">try</span>:
+                <span class="va">score</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">f"Enter score for student </span><span class="va">{i}</span><span class="st">: "</span>))
+            <span class="kw">except</span> <span class="bi">ValueError</span>:
+                <span class="bi">print</span>(<span class="st">"Please enter a whole number."</span>)
+                <span class="kw">continue</span>
+            <span class="kw">if</span> <span class="nm">0</span> <span class="op">&lt;=</span> <span class="va">score</span> <span class="op">&lt;=</span> <span class="nm">100</span>:
+                <span class="va">scores</span>.<span class="fn">append</span>(<span class="va">score</span>)
+                <span class="kw">break</span>
+            <span class="kw">else</span>:
+                <span class="bi">print</span>(<span class="st">"Score must be between 0 and 100."</span>)
+
+    <span class="kw">return</span> <span class="va">scores</span>
+
+
+<span class="kw">def</span> <span class="fn">generate_report</span>(<span class="va">scores</span>):
+    <span class="st">"""
+    Generate a summary report from a list of scores.
+
+    Returns:
+        dict: highest, lowest, mean, pass_count
+    """</span>
+    <span class="va">highest</span>    <span class="op">=</span> <span class="bi">max</span>(<span class="va">scores</span>)
+    <span class="va">lowest</span>     <span class="op">=</span> <span class="bi">min</span>(<span class="va">scores</span>)
+    <span class="va">mean</span>       <span class="op">=</span> <span class="bi">sum</span>(<span class="va">scores</span>) <span class="op">/</span> <span class="bi">len</span>(<span class="va">scores</span>)
+    <span class="va">pass_count</span> <span class="op">=</span> <span class="bi">sum</span>(<span class="nm">1</span> <span class="kw">for</span> <span class="va">s</span> <span class="kw">in</span> <span class="va">scores</span> <span class="kw">if</span> <span class="va">s</span> <span class="op">&gt;=</span> <span class="nm">50</span>)
+
+    <span class="kw">return</span> {
+        <span class="st">"highest"</span>:    <span class="va">highest</span>,
+        <span class="st">"lowest"</span>:     <span class="va">lowest</span>,
+        <span class="st">"mean"</span>:       <span class="bi">round</span>(<span class="va">mean</span>, <span class="nm">2</span>),
+        <span class="st">"pass_count"</span>: <span class="va">pass_count</span>
+    }
+
+
+<span class="cm"># ─── MAIN PROGRAM ──────────────────────────────</span>
+<span class="va">num_students</span> <span class="op">=</span> <span class="bi">int</span>(<span class="bi">input</span>(<span class="st">"How many students? "</span>))
+
+<span class="va">all_scores</span> <span class="op">=</span> <span class="fn">collect_scores</span>(<span class="va">num_students</span>)
+<span class="va">report</span>     <span class="op">=</span> <span class="fn">generate_report</span>(<span class="va">all_scores</span>)
+
+<span class="bi">print</span>(<span class="st">"\n========== GRADE REPORT =========="</span>)
+<span class="bi">print</span>(<span class="st">f"Highest score  : </span><span class="va">{report['highest']}</span><span class="st">"</span>)
+<span class="bi">print</span>(<span class="st">f"Lowest score   : </span><span class="va">{report['lowest']}</span><span class="st">"</span>)
+<span class="bi">print</span>(<span class="st">f"Average score  : </span><span class="va">{report['mean']:.2f}</span><span class="st">"</span>)
+<span class="bi">print</span>(<span class="st">f"Students passed: </span><span class="va">{report['pass_count']}</span><span class="st"> / </span><span class="va">{num_students}</span><span class="st">"</span>)
+<span class="bi">print</span>(<span class="st">"=================================="</span>)
+
+<span class="bi">print</span>(<span class="st">"\nIndividual grades:"</span>)
+<span class="kw">for</span> <span class="va">idx</span>, <span class="va">sc</span> <span class="kw">in</span> <span class="bi">enumerate</span>(<span class="va">all_scores</span>, <span class="nm">1</span>):
+    <span class="bi">print</span>(<span class="st">f"  Student </span><span class="va">{idx}</span><span class="st">: </span><span class="va">{sc}</span><span class="st"> — </span><span class="va">{get_grade(sc)}</span><span class="st">"</span>)</pre>
+      </div>
+      <table class="anno-table">
+        <tr><td>scores = []</td><td>Empty list. Filled one score at a time using append().</td></tr>
+        <tr><td>scores.append(score)</td><td>Adds one item to the end of the list.</td></tr>
+        <tr><td>max() / min()</td><td>Built-ins — highest or lowest value in a list.</td></tr>
+        <tr><td>sum(1 for s in scores if s >= 50)</td><td>Generator expression — counts items that meet a condition.</td></tr>
+        <tr><td>return {...}</td><td>Returns a dictionary. Access with report["highest"], etc.</td></tr>
+        <tr><td>enumerate(all_scores, 1)</td><td>Gives both the index (starting at 1) and the value at each step.</td></tr>
+      </table>
+      <div class="note">
+        <span class="note-icon">📝</span>
+        <span>When handwriting: divide into four clearly labelled sections — <strong>get_grade()</strong>, <strong>collect_scores()</strong>, <strong>generate_report()</strong>, <strong>Main Program</strong>. This shows modular thinking, not just syntax.</span>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="quiz">
+      <div class="quiz-wrap" data-correct="1">
+        <div class="quiz-q">What does <code>enumerate(all_scores, 1)</code> do?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-idx="0">Sorts the list starting from 1</button>
+          <button class="quiz-opt" data-idx="1">Loops through the list giving both the index (starting at 1) and the value at each step</button>
+          <button class="quiz-opt" data-idx="2">Counts how many items are in the list</button>
+          <button class="quiz-opt" data-idx="3">Returns the element at position 1</button>
+        </div>
+        <div class="quiz-feedback"></div>
+        <button class="quiz-retry" onclick="resetQuiz(this)">↺ Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-stripe">
+    <div class="stripe-green" style="flex:3"></div>
+    <div class="stripe-gold" style="flex:1"></div>
+    <div class="stripe-red" style="flex:1"></div>
+  </div>
+  <div class="footer-inner" style="margin-top:32px">
+    <div class="footer-logo">JKUAT — Group 3</div>
+    <div class="footer-text">
+      <strong>BBIT 1.2 Introduction to Computer Programming</strong><br>
+      Compiled by <strong>Darwin Osteen</strong> · For educational use · Python 3
+    </div>
+    <div style="margin-top:16px; font-size:12px; color:var(--muted); font-style:italic;">
+      "The way to learn a programming language is by writing programmes in it." — Dennis Ritchie
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<div id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+</div>
+
+<script>
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('progress-bar').style.width = ((window.scrollY / total) * 100) + '%';
+  document.getElementById('scroll-top').classList.toggle('show', window.scrollY > 400);
+});
+
+// ── SIDEBAR ──
+const menuBtn = document.getElementById('menu-btn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+  menuBtn.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+  menuBtn.classList.remove('open');
+});
+
+// ── SIDEBAR NAV ──
+document.querySelectorAll('.nav-item[data-target]').forEach(item => {
+  item.addEventListener('click', () => {
+    const target = document.getElementById(item.dataset.target);
+    if (target) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuBtn.classList.remove('open');
+      target.classList.add('expanded');
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// ── ACCORDION ──
+document.querySelectorAll('.q-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const card = header.closest('.q-card');
+    if (!card.classList.contains('force-visible') || !card.querySelector('.q-body')) {
+      card.classList.toggle('expanded');
+    }
+  });
+});
+
+// ── TABS ──
+document.querySelectorAll('.tabs').forEach(tabGroup => {
+  tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = tabGroup.closest('.q-body') || tabGroup.parentElement;
+      tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      body.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = body.querySelector(`[data-panel="${btn.dataset.tab}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+});
+
+// ── QUIZ ──
+const msgs = {
+  correct: ["✓ Correct! Sawa sawa!", "✓ Exactly right!", "✓ Perfect — well done!", "✓ Spot on!"],
+  wrong: ["✗ Not quite. Check the Explanation tab.", "✗ Incorrect — think again.", "✗ Karibu — almost. Try again!"]
+};
+document.querySelectorAll('.quiz-wrap').forEach(quiz => {
+  const correct = parseInt(quiz.dataset.correct);
+  const opts = quiz.querySelectorAll('.quiz-opt');
+  const feedback = quiz.querySelector('.quiz-feedback');
+  opts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      opts.forEach(o => o.disabled = true);
+      const chosen = parseInt(opt.dataset.idx);
+      if (chosen === correct) {
+        opt.classList.add('correct');
+        feedback.textContent = msgs.correct[Math.floor(Math.random() * msgs.correct.length)];
+        feedback.className = 'quiz-feedback show correct';
+      } else {
+        opt.classList.add('wrong');
+        opts[correct].classList.add('correct');
+        feedback.textContent = msgs.wrong[Math.floor(Math.random() * msgs.wrong.length)];
+        feedback.className = 'quiz-feedback show wrong';
+      }
+    });
+  });
+});
+function resetQuiz(btn) {
+  const quiz = btn.closest('.quiz-wrap');
+  quiz.querySelectorAll('.quiz-opt').forEach(o => { o.disabled = false; o.classList.remove('correct', 'wrong'); });
+  const fb = quiz.querySelector('.quiz-feedback');
+  fb.className = 'quiz-feedback'; fb.textContent = '';
+}
+
+// ── COPY CODE ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── SEARCH ──
+document.getElementById('search-input').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.q-card[data-keywords]').forEach(card => {
+    if (!q) { card.classList.remove('hidden'); return; }
+    const kw = (card.dataset.keywords || '') + ' ' + (card.querySelector('.q-title')?.textContent.toLowerCase() || '');
+    card.classList.toggle('hidden', !kw.includes(q));
+  });
+});
+
+// ── INTERSECTION OBSERVER ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.q-card:not(.force-visible), .section-header').forEach(el => observer.observe(el));
+
+// ── THEME TOGGLE ──
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  setTheme(saved);
+}
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  const icon = document.getElementById('theme-icon');
+  icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  setTheme(current === 'light' ? 'dark' : 'light');
+});
+initTheme();
+</script>
+</body>
+</html>
