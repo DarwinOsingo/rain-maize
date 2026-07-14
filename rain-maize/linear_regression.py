@@ -1,17 +1,33 @@
-#location_type,terrain,climate,soil_type,construction_season,road_length_km,road_width_m,num_workers,dist_supplier_km,num_bridges,num_culverts,total_cost_KES_M
-import pandas as pd 
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns 
+def attention(words):
+    outputs = []
+    for word in words:
+        product = []
+        for i in range(len(word)):
+            sum += word[i]+word[i]
+        # step 1: compute dot_product(word, w) for every w in words -> list of scores
+        scores = []
+        for w in words:
+            pass  # fill in
 
-df = pd.read_csv('kenya_roads.csv')
+        # step 2: turn scores into weights using softmax
+        weights = []  # fill in
+
+        # step 3: blend all words together using those weights
+        # each word vector gets scaled by its weight, then summed element-wise
+        blended = [0] * len(word)
+        for weight, w in zip(weights, words):
+            pass  # fill in: scale w by weight, add into blended
+
+        outputs.append(blended)
+    return outputs
 
 
-df['cost_per_km']=df['total_cost_KES_M']/df['road_length_km']
-
-df = pd.get_dummies(df,columns=["location_type","climate","construction_season","terrain","soil_type"],drop_first=True    )
-df = df.drop(columns=['project_id','total_cost_KES_M'])
-x= df.drop(columns = ['cost_per_km']).values.astype(float)
-y = df['cost_per_km'].values.astype(float)
-feature_names= df.drop(columns=['cost_per_km']).columns.tolist()
-
+if __name__ == "__main__":
+    words = [
+        [1, 0, 1],
+        [0, 1, 1],
+        [1, 1, 0],
+    ]
+    result = attention(words)
+    for i, out in enumerate(result):
+        print(f"word {i}: {out}")
