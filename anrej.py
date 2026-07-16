@@ -1,3 +1,4 @@
+import torch 
 with open("shakespere.txt","r")as f:
     text= f.read()
 char = sorted(list(set(text)))
@@ -10,3 +11,9 @@ encode = lambda s:[stoi[c] for c in s]
 decode = lambda d : ''.join([itos[i] for i in d])
 print(encode("Hii there"))
 print(decode(encode("Hii there")))
+data = torch.tensor(encode(text),dtype=torch.long)
+print(data.shape )
+print(data[:100])
+n = int(0.9*len(data))
+train = data[:n]
+val = data[n:]
