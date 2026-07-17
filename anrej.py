@@ -18,3 +18,4 @@ n = int(0.9*len(data))
 train = data[:n]
 val = data[n:]
 block_size = 8
+train[:block_size+1]
