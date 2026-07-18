@@ -30,5 +30,8 @@ torch.manual_seed(42)
 def get_batches(split):
     data = train if split == "train" else val
     ix = torch.randint[len(data)-block_size,(4,)]
+    x = torch.stack([data[i:block_size+i] for i in ix])
+    y = torch.stack([data[i+1:block_size+1+i] for i in ix])
+    return x,y
 
 
