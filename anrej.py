@@ -13,8 +13,7 @@ print(encode("Hii there"))
 print(decode(encode("Hii there")))
 
 data = torch.tensor(encode(text),dtype=torch.long)
-print(data.shape )
-print(data[:100])
+
 
 n = int(0.9*len(data))
 train = data[:n]
@@ -29,9 +28,18 @@ y = train[1:block_size+1]
 torch.manual_seed(42)
 def get_batches(split):
     data = train if split == "train" else val
-    ix = torch.randint[len(data)-block_size,(4,)]
+    ix = torch.randint(0,len(data)-block_size,(batch_size,))
     x = torch.stack([data[i:block_size+i] for i in ix])
-    y = torch.stack([data[i+1:block_size+1+i] for i in ix])
+    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
     return x,y
+xb,yb = get_batches("train")
+print(xb.shape)
+print(yb.shape)
+for b in range(batch_size):
+    for t in range (block_size):
+        context = xb[b,:t+1]
+        target = yb[b,t]
+        print(f"if context is {context} then the prediction should be {target}")
+    
 
 
