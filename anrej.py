@@ -1,4 +1,7 @@
 import torch 
+import torch.nn as nn
+import torch.nn.functional as f
+
 with open("shakespere.txt","r")as f:
     text= f.read()
 char = sorted(list(set(text)))
@@ -40,6 +43,11 @@ for b in range(batch_size):
         context = xb[b,:t+1]
         target = yb[b,t]
         print(f"if context is {context} then the prediction should be {target}")
+class BigramLanguageModel(nn.Module):
+    def __init__(self,vocab_size):
+        super().__init__()
+        
+
     
 
 
