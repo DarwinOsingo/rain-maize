@@ -53,9 +53,10 @@ class Library:
             print(f"\n{book.title} status :{status}")
     def show_member_books(self,member):
         print("="*50)
-        print(f"\n WELCOME TO THE LIBRARY :{member} These are your books")
+        print(f"\n WELCOME TO THE LIBRARY :{member} These are your books!")
         print("="*50)
-        personal = self.books_taken
+        for index,book in enumerate(member.books_taken,start=1):
+            print(f"\n  {index}:{book}")
 
 
 
