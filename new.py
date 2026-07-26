@@ -10,8 +10,8 @@ class Character:
     def attack(self,abilities_name: str ):
         print(f"Take thiss {abilities_name}")
         
-    def take_damage(self,damage_recieved:int)->int:
-        damage_recieved = self.potency(ability_name="some_ability")
+    def take_damage(self,abilities_name: str ,damage_recieved:int)->int:
+        damage_recieved = self.potency(abilities_name)
         self.health -= damage_recieved
 
 
