@@ -13,6 +13,11 @@ class Character:
     def take_damage(self,abilities_name: str ,damage_recieved:int)->int:
         damage_recieved = self.potency(abilities_name)
         self.health -= damage_recieved
+        hp = self.health/100
+        print(f"HP:{hp}")
+class warrior():
+    def __init__(self):
+        super()
 
 
 
