@@ -40,7 +40,7 @@ class battle(Titan):
         self.defence = defence
         self.speed = speed
     def attack(self,abilities_name:str)->int:
-        damage = self.abilities.get(abilities_name,0)
+        damage = ATTACKS.get(abilities_name,0)
         if self.hardened:
             damage*= 1.5
         print(f"Poow {abilities_name}")
