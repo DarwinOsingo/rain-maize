@@ -1,24 +1,6 @@
-class Character:
-    def __init__(self,name:str,health:int,abilities:dict[str,int] ):
-        self.abilities = abilities
-        self.health = health
-        self.name = name
-    def potency(self,ability_name:str) -> int:
-        damage = self.abilities.get(ability_name,0)
-        return damage
+import random
+class embeddings():
+    def __init__(self,num_embeddings,embedding_dimesions):
+        self.weight = [[random.uniform(-1,1) for _ in  range(num_embeddings)] for _ in range(embedding_dimesions)]
     
-    def attack(self,abilities_name: str ):
-        print(f"Take thiss {abilities_name}")
-        
-    def take_damage(self,abilities_name: str ,damage_recieved:int)->int:
-        damage_recieved = self.potency(abilities_name)
-        self.health -= damage_recieved
-        hp = self.health/100
-        print(f"HP:{hp}")
-class warrior():
-    def __init__(self):
-        super()
-
-
-
-        
+        pass
