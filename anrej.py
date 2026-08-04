@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as f
 
-with open("shakespere.txt","r")as f:
-    text= f.read()
+with open("shakespere.txt","r")as file:
+    text= file.read()
 char = sorted(list(set(text)))
 
 vocab = len(char)
@@ -47,9 +47,12 @@ class BigramLanguageModel(nn.Module):
     def __init__(self,vocab_size):
         super().__init__()
         self.token_lookup_table = nn.Embedding(vocab_size,vocab_size)
-    def forward(self,idx):
+    def forward(self,idx,targets=None):
         logits = self.token_lookup_table(idx)
-        return logits
+        if targets == None:
+            loss = None
+        
+    
 
     
 

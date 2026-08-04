@@ -1,5 +1,5 @@
-class callout():
-    def __call__(self, *args, **kwds):
-        print("Heyyyyy")
-p= callout()
-p()
+import random
+numbers = []
+for i in range(5):
+    numbers.append(random.randint(100,500))
+print(numbers)
