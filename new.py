@@ -1,5 +1,2 @@
-import random
-numbers = []
-for i in range(5):
-    numbers.append(random.randint(100,500))
-print(numbers)
+nums = i in range(20)
+even = [n for n in nums if n% 2 ==0]
