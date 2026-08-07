@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import time
 import os
 
-BASE_URL = "https://allnovel.org"
-NOVEL_URL = f"{BASE_URL}/shadow-slave.html"
-OUTPUT_DIR = "shadow-slave"
+BASE_URL = "https://freenovel.org"
+NOVEL_URL = f"{BASE_URL}/freenoncpywritedbooks.html"
+OUTPUT_DIR = "freenoncpywritedbooks"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
