@@ -49,9 +49,23 @@ class BigramLanguageModel(nn.Module):
         self.token_lookup_table = nn.Embedding(vocab_size,vocab_size)
     def forward(self,idx,targets=None):
         logits = self.token_lookup_table(idx)
-        if targets == None:
+        if targets is None:
+
             loss = None
+        else:
+            B,T,C = logits.shape
+            logits = logits.view(B*T,C)
+            targets = targets.view(B*T)
+            loss = f.cross_entropy(logits,targets)
+        return logits,loss
+    def generate(self,idx,max_tokens):
+        for _ in range(max_tokens):
+            logits,loss = self(idx)
+            logits  = logits[:,-1,:]
+            
+            
         
+
     
 
     
