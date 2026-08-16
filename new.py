@@ -1,15 +1,10 @@
-products = [
-    {"name": "Laptop", "price": 80000},
-    {"name": "Phone", "price": 50000},
-    {"name": "Tablet", "price": 30000},
-    {"name": "Monitor", "price": 25000}
+students = [
+    {"name": "Alice", "score": 82},
+    {"name": "Bob", "score": 48},
+    {"name": "Charlie", "score": 91},
+    {"name": "David", "score": 76}
 ]
-highest = max(products,key =lambda price:price["price"])
-lowest = min(products,key=lambda price:price["price"])
-
-print(f"The most expesnive device is {highest["name"]} at {highest["price"]}")
-
-print(f"The least expensive is {lowest["name"]} at {lowest["price"]}")
-
-
-
+above_90 = any(student["score"] >90 for student in students)
+above_50 = all(student["score"] >50 for student in students)
+print(above_50)
+print(above_90)
