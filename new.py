@@ -1,3 +1,3 @@
-num = [1,2,3,4,4,4,4,4,5,56,6,4,6]
-total = sum(num)
-print(total)
+numbers = [1, 2, 3, 4]
+squares = [num*2 for num in numbers if num % 2 == 0]
+print(squares)
