@@ -1,5 +1,6 @@
+import torch
 text = """
-he quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs!
+The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs!
 "Where," she asked, "did you put the keys?" He replied: "I left them on the shelf."
 Jinxed wizards pluck ivy from the big quilt; zebras march quickly, dodging trees.
 It's a fine day (mostly) -- warm, bright, and calm. Don't you think so? I do.
@@ -21,14 +22,21 @@ ints_to_words = {i:ch for i,ch in enumerate(words)}
 encode = lambda s:[ words_to_ints[l] for l in s ]
 decode = lambda t:"".join([ints_to_words[k]for k in t])
 print(encode("boy"))
-print(decode([16, 2, 17, 2, 12, 23, 18, 10, 18]))
+
 #now I need to make x and y such that x +1 = y so that they correspond simple enough I could use a for loop 
 #but im not sure what exactly to loop over 
 data = encode(text)
 x = data[:-1]
 y=data[1:]
-print(len(words))
+vocab_size =len(words)
+dim = 12
 
 
+embedding = torch.randn(vocab_size,dim)
+char = "c"
+idx = words_to_ints[char]
+# print(idx)
 
-
+# print(embedding[idx])
+print(embedding[x[0]].shape)
+W = torch.randn(vocab_size,dim)
