@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as f
 text = """
 The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs!
 "Where," she asked, "did you put the keys?" He replied: "I left them on the shelf."
@@ -21,7 +22,7 @@ ints_to_words = {i:ch for i,ch in enumerate(words)}
 
 encode = lambda s:[ words_to_ints[l] for l in s ]
 decode = lambda t:"".join([ints_to_words[k]for k in t])
-print(encode("boy"))
+
 
 #now I need to make x and y such that x +1 = y so that they correspond simple enough I could use a for loop 
 #but im not sure what exactly to loop over 
@@ -32,11 +33,25 @@ vocab_size =len(words)
 dim = 12
 
 
-embedding = torch.randn(vocab_size,dim)
-char = "c"
-idx = words_to_ints[char]
+embedding = torch.randn(vocab_size,dim,requires_grad=True)
+
 # print(idx)
 
 # print(embedding[idx])
-print(embedding[x[0]].shape)
-W = torch.randn(vocab_size,dim)
+
+
+
+
+
+x_tensor = torch.tensor(x,dtype=torch.long)
+y_tensor = torch.tensor(y,dtype=torch.long)
+batch_x = x_tensor[:32]
+batch_y = y_tensor[:32]
+batch_embeddings = embedding[batch_x]
+#print(batch_embeddings)
+#print(vocab_size)
+W = torch.randn(dim,vocab_size,requires_grad=True)
+logits = batch_embeddings@W
+loss = f.cross_entropy(logits,batch_y)
+loss.backward()
+print(W.grad.shape)
